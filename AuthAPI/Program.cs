@@ -1,6 +1,7 @@
 using AuthAPI.Infrastructure.Context;
 using AuthAPI.Infrastructure.Interfaces;
 using AuthAPI.Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -45,8 +46,14 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
     };
-});
+})
 
+// Adding Google Authentication
+.AddGoogle(options =>
+{
+    options.ClientId = "845181127864-f9j8f32j0ufsfi4spn21tapsi0k3r9k2.apps.googleusercontent.com";
+    options.ClientSecret = "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";
+});
 
 ConfigureServices(builder);
 
@@ -65,7 +72,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-app.UseAuthorization(); 
+app.UseAuthorization();
 
 app.MapControllers();
 
